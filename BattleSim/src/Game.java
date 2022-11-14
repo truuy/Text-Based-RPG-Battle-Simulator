@@ -21,12 +21,56 @@ public class Game {
 		System.out.println("(1) Fighter, (2) Ranger, (3) Mage, (4) Priest");
 		selectClass = inputValidation(1,4); //input
 		
-		//Create Player Object
+		//Create Player Object and Map
 		Player player = new Player(name, 1, 0, 0, 0, 0, 0, 0, 0, selectRace, selectClass);
+		Map map = new Map();
 		player.createCharacter();
 		
-		//Show Player Statistics after creation
 		player.showStats();
+		
+		System.out.println("\n ====== GAME START ====== \n");
+		
+		//Actions
+		while(true)
+		{
+			
+			int action = 0;
+			System.out.println("CHOOSE YOUR ACTION");
+			System.out.println("(1) Move, (2) Rest, (3) Show Stats, (4) Quit");
+			action = inputValidation(1,4);
+			
+			switch (action)
+			{
+				//Traverse Map
+				case 1:
+				{
+					map.traverseMap();
+					break;
+				}
+				
+				//Player Rest
+				case 2:
+				{
+					
+				}
+				
+				//Show Player Statistics
+				case 3:
+				{
+					player.showStats();
+					break;
+				}
+			}
+		}
+		
+		
+		
+		
+		
+		 
+		
+		
+		
 	}	
 	
 	static int inputValidation(int low, int hi)
