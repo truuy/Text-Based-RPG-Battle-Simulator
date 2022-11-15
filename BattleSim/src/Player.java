@@ -10,7 +10,9 @@ public class Player extends Actors{
 	String race;
 	String pclass;
 	
-	public Player(String name, int baseDMG, int HP, int MP, int STR, int VIT, int DEX, int AGI, int INT, int raceCode, int classCode) {
+	
+	//Constructor
+	Player(String name, int baseDMG, int HP, int MP, int STR, int VIT, int DEX, int AGI, int INT, int raceCode, int classCode) {
 		super(name, baseDMG, HP, MP, STR, VIT, DEX, AGI, INT);
 		
 		this.name = name;
@@ -26,33 +28,19 @@ public class Player extends Actors{
 		this.classCode = classCode;
 	}
 	
-	public void showStats()
+	
+	
+	String getName()
 	{
-		System.out.println("\n ====== CHARACTER STATS ====== \n");
-		System.out.println("Name:		"+name);
-		System.out.println("Race:		"+race);
-		System.out.println("Class:		"+pclass);
-		System.out.println("LVL:		"+level);
-		System.out.println("EXP:		"+exp);
-		System.out.println("GLD:		"+gold);
-		System.out.println(" ");
-		System.out.println("HP:		"+HP);
-		System.out.println("MP:		"+MP);
-		System.out.println("Base Damage:	"+baseDMG);
-		System.out.println("STR:		"+STR);
-		System.out.println("VIT:		"+VIT);
-		System.out.println("DEX:		"+DEX);
-		System.out.println("AGI:		"+AGI);
-		System.out.println("INT:		"+INT);
-		System.out.println("Weapon:		"+weapon);
+		return name + " (lvl" + level +")";
 	}
 	
-	public String getName()
+	int getHP()
 	{
-		return name;
+		return HP;
 	}
 	
-	public void createCharacter()
+	void createCharacter()
 	{
 		if(raceCode == 1 && classCode == 1)
 		{
@@ -183,6 +171,7 @@ public class Player extends Actors{
 			INT = 3;
 			weapon = "Scepter";
 		}
+		
 		else if(raceCode == 3 && classCode == 1)
 		{
 			race = "Elf";
@@ -247,6 +236,7 @@ public class Player extends Actors{
 			INT = 2;
 			weapon = "Tome";
 		}
+		
 		else if(raceCode == 4 && classCode == 1)
 		{
 			race = "Halfling";
@@ -313,6 +303,28 @@ public class Player extends Actors{
 			weapon = "Silver Staff";
 		}
 		
+	}
+	
+	void showStats()
+	{
+		System.out.println("\n ====== CHARACTER STATS ====== \n");
+		System.out.println(" --INFO-- ");
+		System.out.println("Name:		"		+name);
+		System.out.println("Race:		"		+race);
+		System.out.println("Class:		"		+pclass);
+		System.out.println("LVL:		"		+level);
+		System.out.println("EXP:		"		+exp);
+		System.out.println("GLD:		"		+gold);
+		System.out.println("--STATS--");
+		System.out.println("HP:		"			+HP);
+		System.out.println("MP:		"			+MP);
+		System.out.println("Base Damage:	"	+baseDMG);
+		System.out.println("STR:		"		+STR);
+		System.out.println("VIT:		"		+VIT);
+		System.out.println("DEX:		"		+DEX);
+		System.out.println("AGI:		"		+AGI);
+		System.out.println("INT:		"		+INT);
+		System.out.println("Weapon:		"		+weapon);
 	}
 	
 	

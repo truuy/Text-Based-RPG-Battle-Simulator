@@ -1,4 +1,4 @@
-public class Actors {
+public abstract class Actors {
 	
 	String name;
 	int baseDMG = 1;

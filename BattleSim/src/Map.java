@@ -1,12 +1,15 @@
 import java.util.Scanner;
 
 public class Map {
+	
+	
 	int x;
 	int y;
 	
-	void traverseMap()
+	
+	int traverseMap()
 	{
-		
+		int spawn;
 		int action = 0;
 		displayPosition(x,y);
 		System.out.println("(1)North, (2)East, (3)South, (4)West");
@@ -17,28 +20,48 @@ public class Map {
 			case 1:
 			{
 				y++;
+				System.out.println("You moved north.");
 				displayPosition(x,y);
-				break;
+				spawn = rollSpawn();
+				
+				return spawn;
 			}
+			
 			case 2:
 			{
 				x++;
+				System.out.println("You moved east.");
 				displayPosition(x,y);
-				break;			
+				spawn = rollSpawn();
+				return spawn;
 			}
 			case 3:
 			{
 				y--;
+				System.out.println("You moved south.");
 				displayPosition(x,y);
-				break;
+				spawn = rollSpawn();
+				return spawn;
 			}
 			case 4:
 			{
 				x--;
+				System.out.println("You moved west.");
 				displayPosition(x,y);
-				break;
+				spawn = rollSpawn();
+				return spawn;
 			}
 		}
+		return 0;
+	}
+	
+	int rollSpawn ()
+	{
+		Dice die = new Dice();
+		int spawn;
+		//Spawn monster
+		spawn = die.rollDie(2);
+		return spawn;
 	}
 	
 	void displayPosition(int x, int y)
