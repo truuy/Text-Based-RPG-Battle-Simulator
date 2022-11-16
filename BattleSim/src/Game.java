@@ -2,6 +2,8 @@ import java.util.Scanner;
 
 public class Game {
 	
+	static boolean gameStart = true;
+	
 	static Scanner scanner = new Scanner (System.in);
 	
 	public static void main(String[] args) {
@@ -9,6 +11,7 @@ public class Game {
 		String name;
 		int selectRace = 0;
 		int selectClass = 0;
+		
 		
 		System.out.println("Simple Battle Simulator made by Troy Ulang (Object Oriented Programming)");
 		System.out.println("\n ====== CHARACTER CREATION ====== \n");
@@ -57,8 +60,8 @@ public class Game {
 						Monsters monster = spawnMonster();
 						System.out.println("An enraged "+monster.getName()+" appeared out of nowhere! get ready to fight!!");
 						battlePhase(player, monster);
+						break;
 					}		
-					break;
 				}
 				
 				//Player Rest
@@ -74,8 +77,6 @@ public class Game {
 					break;
 				}
 			}
-			
-			
 		}//loop end
 	}
 	
@@ -86,7 +87,7 @@ public class Game {
 		
 		while (true)
 		{
-			Dice die = new Dice();
+			
 			System.out.println(player.getName() +" HP: "+player.HP);
 			System.out.println(monster.getName() +" HP: "+monster.HP);
 			
@@ -99,27 +100,28 @@ public class Game {
 				//Attack
 				case 1:
 				{
-					int damage = 0;
-					double accuracy = 75;
-					double hitRate = 0;
-					double enemyEvasion = 0;
+					dealDamage(player, monster);
+					takeDamage(player, monster);
 					
-					//Hit or Miss (i guess you'll never miss huh)
-					die.rollDie(100);
-					hitRate = (player.DEX * 0.1)*100;
-					enemyEvasion = (monster.AGI * 0.1) * 100;
-					accuracy = accuracy + (hitRate + enemyEvasion);
-					
-					
-					
-					
-					
-					
-					
-					damage = (player.baseDMG * player.STR) - monster.VIT;
-					System.out.println(player.getName() +" attaked the "+monster.getName() + " for "+ damage +"points!");
-					monster.takeDamage(damage);
-					continue;
+					if(monster.HP <= 0)
+					{
+						System.out.println("The "+monster.getName()+" has been slained. Gained "+monster.expReward+" exp.");
+						monster = null;
+						System.out.println("\n ====== END OF BATTLE ====== \n");
+						break;
+					}
+					else if(player.HP <= 0)
+					{
+						System.out.println("You have been slained.");
+						monster = null;
+						player = null;
+						System.out.println("\n ====== GAME OVER ====== \n");
+						System.exit(0);
+					}
+					else
+					{
+						continue;
+					}
 				}
 				//Cast Spells
 				case 2:
@@ -142,37 +144,140 @@ public class Game {
 		}
 	}
 	
+	static void dealDamage(Player player, Monsters monster)
+	{
+		Dice die = new Dice();
+		int damage = 0;
+		double critChance = 5;
+		int critDmg = 0;
+		double critBns = 0;
+		double accuracy = 55;
+		double hitRate = 0;
+		double enemyEvasion = 0;
+		
+		//Hit or Miss (i guess you'll never miss huh)
+		int dieResult = die.rollDie(100);
+		hitRate = (player.DEX * 0.1)*100;
+		enemyEvasion = (monster.AGI * 0.1) * 100;
+		accuracy = accuracy + (hitRate - enemyEvasion);
+		damage = (player.baseDMG * player.STR) - monster.VIT;
+		critChance = Math.ceil(critChance);
+		critBns = Math.ceil(damage * 0.50);
+		critDmg = damage + (int)critBns;
+		
+		//Clamp the accuracy to max 80
+		if(accuracy > 80)
+		{
+			accuracy = 80;
+		}
+		System.out.println("Accuracy: "+accuracy);
+		if (dieResult <= accuracy)
+		{
+			int critRoll = die.rollDie(100);
+			if(critRoll <= critChance) 
+			{
+				System.out.println(player.getName() +" attacked the "+monster.getName() + " with a "+player.weapon+" for "+ critDmg +"points! Critical hit!");
+				monster.takeDamage(critDmg);
+				
+			}
+			else
+			{
+				System.out.println(player.getName() +" attacked the "+monster.getName() + " with a "+player.weapon+ " for "+ damage +"points!");
+				monster.takeDamage(damage);
+			}
+		}
+		else
+		{
+			System.out.println("Your attack missed.");
+		}
+	}
+	
+	static void takeDamage(Player player, Monsters monster)
+	{
+		Dice die = new Dice();
+		int damage = 0;
+		double critChance = 5;
+		int critDmg = 0;
+		double critBns = 0;
+		double accuracy = 55;
+		double hitRate = 0;
+		double enemyEvasion = 0;
+		
+		//Hit or Miss (i guess you'll never miss huh)
+		int dieResult = die.rollDie(100);
+		hitRate = (monster.DEX * 0.1)*100;
+		enemyEvasion = (player.AGI * 0.1) * 100;
+		accuracy = accuracy + (hitRate - enemyEvasion);
+		damage = (monster.baseDMG * monster.STR) - player.VIT;
+		critChance = Math.ceil(critChance);
+		critBns = Math.ceil(damage * 0.50);
+		critDmg = damage + (int)critBns;
+		
+		//Clamp the accuracy to max 80
+		if(accuracy > 80)
+		{
+			accuracy = 80;
+		}
+		
+		//If damage is lower than 0, replace with 1 as minimum
+		if(damage <= 0)
+		{
+			damage = 1;
+		}
+	
+		System.out.println("Accuracy: "+accuracy);
+		if (dieResult <= accuracy)
+		{
+			int critRoll = die.rollDie(100);
+			if(critRoll <= critChance) 
+			{
+				System.out.println(monster.getName() +" attacked "+player.getName() + " with a "+monster.weapon+" for "+ critDmg +"points! Critical hit!");
+				player.takeDamage(critDmg);
+				
+			}
+			else
+			{
+				System.out.println(monster.getName() +" attacked "+player.getName() + " with a "+monster.weapon+ " for "+ damage +"points!");
+				player.takeDamage(damage);
+			}
+		}
+		else
+		{
+			System.out.println(monster.getName() + "'s attack missed.");
+		}
+	}
+	
 	static Monsters spawnMonster()
 	{
 		Dice die = new Dice();
 		int spawn;
 		spawn = die.rollDie(1, 22);
 		
-		
+		//Spawn Monster
 		if(spawn >= 1 && spawn <= 5)
 		{
-			Monsters monster = new Monsters("Skeleton", 1, 13, 0, 1, 1, 1, 1, 0, 1, "Rusty Axe", 100); 
+			Monsters monster = new Monsters("Skeleton", 2, 13, 0, 2, 1, 1, 1, 0, 1, "Rusty Axe", 100,5); 
 			return monster;
 		}
 		else if(spawn >= 6 && spawn <= 10)
 		{
-			Monsters monster = new Monsters("Orc", 2, 20, 0, 2, 2, 1, 1, 0, 1, "Wooden Club",150); 
+			Monsters monster = new Monsters("Orc", 2, 20, 0, 3, 2, 1, 1, 0, 1, "Wooden Club",150,10); 
 			return monster;
 		}
 		else if(spawn >= 11 && spawn <= 15)
 		{
-			Monsters monster = new Monsters("Goblin", 2, 10, 0, 0, 0, 2, 3, 0, 1, "Dagger", 120); 
+			Monsters monster = new Monsters("Goblin", 2, 10, 0, 0, 0, 2, 3, 0, 1, "Dagger", 120,2); 
 			return monster;
 		}
 		else if(spawn >= 16 && spawn <= 20)
 		{
-			Monsters monster = new Monsters("Vampire", 3, 15, 0, 1, 1, 1, 3, 0, 1, "Sharp Fang", 150); 
+			Monsters monster = new Monsters("Vampire", 3, 15, 0, 1, 1, 1, 3, 0, 1, "Sharp Fang", 150,8); 
 			return monster;
 		}
 		
 		else
 		{
-			Monsters monster = new Monsters("Stone Golem", 10, 30, 0, 5, 1, 1, 5, 0, 1, "Rock Smash", 500);
+			Monsters monster = new Monsters("Stone Golem", 10, 30, 0, 5, 1, 1, 5, 0, 20, "Rock Smash", 500,20);
 			return monster;
 		}
 	}

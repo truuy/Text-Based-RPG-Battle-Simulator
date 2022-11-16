@@ -3,10 +3,11 @@ public class Monsters extends Actors {
 	
 	int level;
 	int expReward;
+	int goldReward;
 	String weapon;
 	
 	//Constructor
-	Monsters(String name, int baseDMG, int HP, int MP, int STR, int VIT, int DEX, int AGI, int INT, int level, String weapon, int expReward) {
+	Monsters(String name, int baseDMG, int HP, int MP, int STR, int VIT, int DEX, int AGI, int INT, int level, String weapon, int expReward, int goldReward) {
 		super(name, baseDMG, HP, MP, STR, VIT, DEX, AGI, INT);
 		
 		this.name = name;
@@ -22,11 +23,12 @@ public class Monsters extends Actors {
 		this.level = level;
 		this.weapon = weapon;
 		this.expReward = expReward;
+		this.goldReward = goldReward;
 	}
 	
 	String getName()
 	{
-		return name + " (lvl" + level +")";
+		return name + " (lv." + level +")";
 	}
 	
 	int getHP()

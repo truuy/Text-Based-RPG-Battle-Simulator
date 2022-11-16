@@ -32,12 +32,17 @@ public class Player extends Actors{
 	
 	String getName()
 	{
-		return name + " (lvl" + level +")";
+		return name + " (lv." + level +")";
 	}
 	
 	int getHP()
 	{
 		return HP;
+	}
+	
+	void takeDamage(int damage)
+	{
+		HP = HP - damage;
 	}
 	
 	void createCharacter()
