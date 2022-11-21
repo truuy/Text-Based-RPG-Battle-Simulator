@@ -12,12 +12,13 @@ public class Player extends Actors{
 	
 	
 	//Constructor
-	Player(String name, int baseDMG, int HP, int MP, int STR, int VIT, int DEX, int AGI, int INT, int raceCode, int classCode) {
-		super(name, baseDMG, HP, MP, STR, VIT, DEX, AGI, INT);
+	Player(String name, int baseDMG, int HP, int maxHP, int MP, int STR, int VIT, int DEX, int AGI, int INT, int raceCode, int classCode) {
+		super(name, baseDMG, HP, maxHP, MP, STR, VIT, DEX, AGI, INT);
 		
 		this.name = name;
 		this.baseDMG = baseDMG;
 		this.HP = HP;
+		this.maxHP = maxHP;
 		this.MP = MP;
 		this.STR = STR;
 		this.VIT = VIT;
@@ -28,7 +29,33 @@ public class Player extends Actors{
 		this.classCode = classCode;
 	}
 	
+	void refreshHP()
+	{
+		HP = maxHP;
+	}
 	
+	void levelUp(int expReward)
+	{
+		exp = exp + expReward;
+		
+		if(exp >= level * 100)
+		{
+			System.out.println(name + " leveled up! Stats increased.");
+			level = level + 1;
+			maxHP = maxHP+1;
+			HP = maxHP;
+			MP = MP + 1;
+			STR = STR + 1;
+			VIT = VIT + 1;
+			DEX = DEX + 1;
+			AGI = AGI + 1;
+			INT = INT + 1;
+		}
+		else
+		{
+			
+		}
+	}
 	
 	String getName()
 	{
@@ -55,6 +82,7 @@ public class Player extends Actors{
 			level = 1;
 			gold = 0;
 			HP = 15;
+			maxHP = 15;
 			MP = 0;
 			STR = 5;
 			VIT = 3;
@@ -71,6 +99,7 @@ public class Player extends Actors{
 			level = 1;
 			gold = 0;
 			HP = 15;
+			maxHP = 15;
 			MP = 3;
 			STR = 3;
 			VIT = 0;
@@ -87,6 +116,7 @@ public class Player extends Actors{
 			level = 1;
 			gold = 0;
 			HP = 15;
+			maxHP = 15;
 			MP = 7;
 			STR = 1;
 			VIT = 0;
@@ -103,6 +133,7 @@ public class Player extends Actors{
 			level = 1;
 			gold = 0;
 			HP = 18;
+			maxHP = 18;
 			MP = 5;
 			STR = 3;
 			VIT = 3;
@@ -119,7 +150,8 @@ public class Player extends Actors{
 			exp = 0;
 			level = 1;
 			gold = 0;
-			HP = 18;
+			HP = 20;
+			maxHP = 20;
 			MP = 0;
 			STR = 7;
 			VIT = 2;
@@ -136,6 +168,7 @@ public class Player extends Actors{
 			level = 1;
 			gold = 0;
 			HP = 18;
+			maxHP = 18;
 			MP = 3;
 			STR = 2;
 			VIT = 0;
@@ -152,6 +185,7 @@ public class Player extends Actors{
 			level = 1;
 			gold = 0;
 			HP = 15;
+			maxHP = 15;
 			MP = 3;
 			STR = 1;
 			VIT = 0;
@@ -201,6 +235,7 @@ public class Player extends Actors{
 			level = 1;
 			gold = 0;
 			HP = 13;
+			maxHP = 13;
 			MP = 5;
 			STR = 2;
 			VIT = 0;
@@ -217,6 +252,7 @@ public class Player extends Actors{
 			level = 1;
 			gold = 0;
 			HP = 15;
+			maxHP = 15;
 			MP = 8;
 			STR = 1;
 			VIT = 0;
@@ -233,6 +269,7 @@ public class Player extends Actors{
 			level = 1;
 			gold = 0;
 			HP = 15;
+			maxHP = 15;
 			MP = 5;
 			STR = 2;
 			VIT = 2;
@@ -250,6 +287,7 @@ public class Player extends Actors{
 			level = 1;
 			gold = 0;
 			HP = 15;
+			maxHP = 15;
 			MP = 0;
 			STR = 3;
 			VIT = 2;
@@ -266,6 +304,7 @@ public class Player extends Actors{
 			level = 1;
 			gold = 0;
 			HP = 15;
+			maxHP = 15;
 			MP = 0;
 			STR = 5;
 			VIT = 0;
@@ -282,6 +321,7 @@ public class Player extends Actors{
 			level = 1;
 			gold = 0;
 			HP = 13;
+			maxHP = 13;
 			MP = 5;
 			STR = 1;
 			VIT = 0;
@@ -299,6 +339,7 @@ public class Player extends Actors{
 			level = 1;
 			gold = 0;
 			HP = 15;
+			maxHP = 15;
 			MP = 3;
 			STR = 2;
 			VIT = 2;
@@ -322,6 +363,7 @@ public class Player extends Actors{
 		System.out.println("GLD:		"		+gold);
 		System.out.println("--STATS--");
 		System.out.println("HP:		"			+HP);
+		System.out.println("HP:		"			+maxHP);
 		System.out.println("MP:		"			+MP);
 		System.out.println("Base Damage:	"	+baseDMG);
 		System.out.println("STR:		"		+STR);

@@ -8,6 +8,7 @@ public class Game {
 	
 	public static void main(String[] args) {
 		
+		Dice die = new Dice();
 		String name;
 		int selectRace = 0;
 		int selectClass = 0;
@@ -27,7 +28,7 @@ public class Game {
 		selectClass = inputValidation(1,4); //input
 		
 		//Create Player Object and Map
-		Player player = new Player(name, 1, 0, 0, 0, 0, 0, 0, 0, selectRace, selectClass);
+		Player player = new Player(name, 1, 0, 0, 0, 0, 0, 0, 0, 0, selectRace, selectClass);
 		Map map = new Map();
 		
 		player.createCharacter();
@@ -67,7 +68,20 @@ public class Game {
 				//Player Rest
 				case 2:
 				{
-					
+					int rest = die.rollDie(2);
+					if (rest == 1)
+					{
+						System.out.println("You are well rested..");
+						player.refreshHP();
+						break;
+					}
+					else
+					{
+						Monsters monster = spawnMonster();
+						System.out.println("An enraged "+monster.getName()+" appeared out of nowhere! get ready to fight!!");
+						battlePhase(player, monster);
+						break;
+					}
 				}
 				
 				//Show Player Statistics
@@ -87,13 +101,13 @@ public class Game {
 		
 		while (true)
 		{
-			
+			System.out.println(" ");
 			System.out.println(player.getName() +" HP: "+player.HP);
 			System.out.println(monster.getName() +" HP: "+monster.HP);
 			
 			System.out.println("\nCHOOSE YOUR MOVE");
-			System.out.println("(1) Attack, (2) Cast Spells, (3) Show Stats, (4) Run");
-			int move = inputValidation(1,4);
+			System.out.println("(1) Attack, (2) Show Stats, (3) Run");
+			int move = inputValidation(1,3);
 			
 			switch (move)
 			{
@@ -105,43 +119,80 @@ public class Game {
 					
 					if(monster.HP <= 0)
 					{
-						System.out.println("The "+monster.getName()+" has been slained. Gained "+monster.expReward+" exp.");
-						monster = null;
-						System.out.println("\n ====== END OF BATTLE ====== \n");
-						break;
+						if(monster.getName() == "Stone Golem")
+						{
+							System.out.println("The "+monster.getName()+" has been finally slained. Your adventure ends here.");
+							monster = null;
+							System.out.println("\n ====== GAME OVER ====== \n");
+							break;
+						}
+						else
+						{
+							System.out.println("The "+monster.getName()+" has been slained. Gained "+monster.addExp()+" exp.");
+							player.levelUp(monster.addExp());
+							monster = null;
+							System.out.println("\n ====== END OF BATTLE ====== \n");
+							break;
+						}
+						
 					}
-					else if(player.HP <= 0)
+					
+					isPlayerDead(player);
+					continue;
+			
+				}
+
+				//Show Statistics
+				case 2:
+				{
+					monster.showStats();
+					continue;
+				}
+				//Run
+				case 3:
+				{
+					Dice die = new Dice();
+					int run = die.rollDie(2);
+					if (run == 2)
 					{
-						System.out.println("You have been slained.");
-						monster = null;
-						player = null;
-						System.out.println("\n ====== GAME OVER ====== \n");
-						System.exit(0);
+						System.out.println("Run failed.");
+						takeDamage(player, monster);
+						isPlayerDead(player);
+						continue;
 					}
 					else
 					{
-						continue;
+						System.out.println("Run succesful.");
+						break;
 					}
-				}
-				//Cast Spells
-				case 2:
-				{
-					
-				}
-				//Show Statistics
-				case 3:
-				{
-					
-				}
-				//Run
-				case 4:
-				{
-					
 				}
 			}
 			
 			break;
 		}
+	}
+	
+	static void isPlayerDead(Player player)
+	{
+		boolean isPlayerDead = false;
+		if(player.HP <= 0)
+		{
+			isPlayerDead = true;
+		}
+		
+		if(isPlayerDead == true)
+		{
+			System.out.println("You have been slained.");
+			player = null;
+			System.out.println("\n ====== GAME OVER ====== \n");
+			System.exit(0);
+		}
+		else
+		{
+			
+		}
+		
+		
 	}
 	
 	static void dealDamage(Player player, Monsters monster)
@@ -170,13 +221,13 @@ public class Game {
 		{
 			accuracy = 80;
 		}
-		System.out.println("Accuracy: "+accuracy);
+		System.out.println("\nAccuracy: "+accuracy);
 		if (dieResult <= accuracy)
 		{
 			int critRoll = die.rollDie(100);
 			if(critRoll <= critChance) 
 			{
-				System.out.println(player.getName() +" attacked the "+monster.getName() + " with a "+player.weapon+" for "+ critDmg +"points! Critical hit!");
+				System.out.println(player.getName() +" attacked the "+monster.getName() + " with a "+player.weapon+" for "+ critDmg +"points! Critical hit!\n");
 				monster.takeDamage(critDmg);
 				
 			}
@@ -225,13 +276,13 @@ public class Game {
 			damage = 1;
 		}
 	
-		System.out.println("Accuracy: "+accuracy);
+		System.out.println("\nAccuracy: "+accuracy);
 		if (dieResult <= accuracy)
 		{
 			int critRoll = die.rollDie(100);
 			if(critRoll <= critChance) 
 			{
-				System.out.println(monster.getName() +" attacked "+player.getName() + " with a "+monster.weapon+" for "+ critDmg +"points! Critical hit!");
+				System.out.println(monster.getName() +" attacked "+player.getName() + " with a "+monster.weapon+" for "+ critDmg +"points! Critical hit!\n");
 				player.takeDamage(critDmg);
 				
 			}
@@ -256,28 +307,28 @@ public class Game {
 		//Spawn Monster
 		if(spawn >= 1 && spawn <= 5)
 		{
-			Monsters monster = new Monsters("Skeleton", 2, 13, 0, 2, 1, 1, 1, 0, 1, "Rusty Axe", 100,5); 
+			Monsters monster = new Monsters("Skeleton", 2, 13, 13, 0, 2, 1, 1, 1, 0, 1, "Rusty Axe", 10); 
 			return monster;
 		}
 		else if(spawn >= 6 && spawn <= 10)
 		{
-			Monsters monster = new Monsters("Orc", 2, 20, 0, 3, 2, 1, 1, 0, 1, "Wooden Club",150,10); 
+			Monsters monster = new Monsters("Orc", 2, 20, 20, 0, 3, 2, 1, 1, 0, 1, "Wooden Club",15); 
 			return monster;
 		}
 		else if(spawn >= 11 && spawn <= 15)
 		{
-			Monsters monster = new Monsters("Goblin", 2, 10, 0, 0, 0, 2, 3, 0, 1, "Dagger", 120,2); 
+			Monsters monster = new Monsters("Goblin", 2, 10, 10, 0, 0, 0, 2, 3, 0, 1, "Dagger", 10); 
 			return monster;
 		}
 		else if(spawn >= 16 && spawn <= 20)
 		{
-			Monsters monster = new Monsters("Vampire", 3, 15, 0, 1, 1, 1, 3, 0, 1, "Sharp Fang", 150,8); 
+			Monsters monster = new Monsters("Vampire", 3, 15, 15, 0, 1, 1, 1, 3, 0, 1, "Sharp Fang", 13); 
 			return monster;
 		}
 		
 		else
 		{
-			Monsters monster = new Monsters("Stone Golem", 10, 30, 0, 5, 1, 1, 5, 0, 20, "Rock Smash", 500,20);
+			Monsters monster = new Monsters("Stone Golem", 10, 30, 30, 0, 5, 1, 1, 5, 0, 20, "Rock Smash", 50);
 			return monster;
 		}
 	}

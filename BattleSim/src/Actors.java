@@ -3,6 +3,7 @@ public abstract class Actors {
 	String name;
 	int baseDMG = 1;
 	int HP = 0;
+	int maxHP = 0;
 	int MP = 0;
 	int STR = 0;
 	int VIT = 0;
@@ -11,12 +12,13 @@ public abstract class Actors {
 	int INT = 0;
 	
 	
-	Actors(String name, int baseDMG, int HP, int MP, int STR, int VIT,
+	Actors(String name, int baseDMG, int HP, int maxHP, int MP, int STR, int VIT,
 			int DEX, int AGI, int INT)
 	{
 		this.baseDMG = baseDMG;
 		this.name = name;
 		this.HP = HP;
+		this.maxHP = maxHP;
 		this.MP = MP;
 		this.STR = STR;
 		this.VIT = VIT;
