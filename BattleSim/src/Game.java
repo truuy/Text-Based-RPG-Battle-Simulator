@@ -212,7 +212,7 @@ public class Game {
 		enemyEvasion = (monster.AGI * 0.1) * 100;
 		accuracy = accuracy + (hitRate - enemyEvasion);
 		damage = (player.baseDMG * player.STR) - monster.VIT;
-		critChance = Math.ceil(critChance);
+		critChance = Math.ceil(critChance * player.DEX);
 		critBns = Math.ceil(damage * 0.50);
 		critDmg = damage + (int)critBns;
 		
@@ -260,7 +260,7 @@ public class Game {
 		enemyEvasion = (player.AGI * 0.1) * 100;
 		accuracy = accuracy + (hitRate - enemyEvasion);
 		damage = (monster.baseDMG * monster.STR) - player.VIT;
-		critChance = Math.ceil(critChance);
+		critChance = Math.ceil(critChance * monster.DEX);
 		critBns = Math.ceil(damage * 0.50);
 		critDmg = damage + (int)critBns;
 		
